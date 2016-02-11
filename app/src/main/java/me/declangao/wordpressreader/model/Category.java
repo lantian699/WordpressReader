@@ -1,11 +1,21 @@
 package me.declangao.wordpressreader.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Category object
  */
-public class Category {
-    private String name;
+@DatabaseTable(tableName = "category")
+public class Category extends ormliteModel{
+
+    @DatabaseField(id = true)
     private int id;
+
+    @DatabaseField
+    private String name;
+
+
 
     public String getName() {
         return name;

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import me.declangao.wordpressreader.model.Post;
+import me.declangao.wordpressreader.util.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity implements
         RecyclerViewFragment.PostListListener, PostFragment.PostListener,
@@ -24,12 +25,15 @@ public class MainActivity extends AppCompatActivity implements
     private CommentFragment cf;
     private SearchResultFragment srf;
 
+    private DatabaseHelper dataHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
         fm = getSupportFragmentManager();
+        dataHelper = DatabaseHelper.getInstance(this);
 
         // Setup fragments
         tlf = new TabLayoutFragment();

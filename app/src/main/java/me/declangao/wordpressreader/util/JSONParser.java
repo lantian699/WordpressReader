@@ -1,12 +1,17 @@
 package me.declangao.wordpressreader.util;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import me.declangao.wordpressreader.R;
 import me.declangao.wordpressreader.app.AppController;
@@ -25,8 +30,8 @@ public class JSONParser {
      * @param jsonObject JSON data
      * @return A list of Category objects
      */
-    public static ArrayList<Category> parseCategories(JSONObject jsonObject) {
-        ArrayList<Category> categoryArrayList = new ArrayList<>();
+    public static ArrayList<Category> parseCategories(JSONObject jsonObject, Context context) {
+        final ArrayList<Category> categoryArrayList = new ArrayList<>();
 
         try {
             // Get "categories" Json array
@@ -43,15 +48,33 @@ public class JSONParser {
                 // Get individual category Json object
                 JSONObject catObj = categories.getJSONObject(i);
                 Log.d(TAG, "Parsing " + catObj.getString("title") + ", ID " + catObj.getInt("id"));
-                Category c = new Category();
-                c.setId(catObj.getInt("id"));
-                c.setName(catObj.getString("title"));
-                categoryArrayList.add(c);
+                Category category = new Category();
+                category.setId(catObj.getInt("id"));
+                category.setName(catObj.getString("title"));
+                categoryArrayList.add(category);
             }
         } catch (JSONException e) {
             Log.d(TAG, "----------------- Json Exception");
             e.printStackTrace();
             return null;
+        }
+
+        try {
+            //insert the category list in one time
+            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(context);
+            final Dao<Category, Integer> categoryDao = databaseHelper.getCategoryDao();
+            categoryDao.callBatchTasks(new Callable<Void>() {
+                public Void call() throws SQLException {
+                    // insert a number of accounts at once
+                    for (Category category : categoryArrayList) {
+                        // update our category object
+                        categoryDao.create(category);
+                    }
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return categoryArrayList;
@@ -63,8 +86,8 @@ public class JSONParser {
      * @param jsonObject JSON data
      * @return A list of Post objects
      */
-    public static ArrayList<Post> parsePosts(JSONObject jsonObject) {
-        ArrayList<Post> posts = new ArrayList<>();
+    public static ArrayList<Post> parsePosts(JSONObject jsonObject, Context context) {
+        final ArrayList<Post> posts = new ArrayList<>();
 
         try{
             JSONArray postArray = jsonObject.getJSONArray("posts");
@@ -100,6 +123,25 @@ public class JSONParser {
             Log.d(TAG, "----------------- Json Exception");
             Log.d(TAG, e.getMessage());
             return null;
+        }
+
+
+        try {
+            //insert the category list in one time
+            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(context);
+            final Dao<Post, Integer> postDao = databaseHelper.getPostDao();
+            postDao.callBatchTasks(new Callable<Void>() {
+                public Void call() throws SQLException {
+                    // insert a number of accounts at once
+                    for (Post post : posts) {
+                        // update our post object
+                        postDao.create(post);
+                    }
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return posts;

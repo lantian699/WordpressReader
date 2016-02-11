@@ -249,7 +249,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                         mSwipeRefreshLayout.setRefreshing(false); // Stop when done
 
                         // Parse JSON data
-                        postList.addAll(JSONParser.parsePosts(jsonObject));
+                        postList.addAll(JSONParser.parsePosts(jsonObject, getActivity()));
 
                         // A temporary workaround to avoid downloading duplicate posts in some
                         // rare circumstances by converting ArrayList to a LinkedHashSet without

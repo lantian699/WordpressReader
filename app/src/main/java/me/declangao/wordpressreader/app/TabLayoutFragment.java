@@ -152,7 +152,7 @@ public class TabLayoutFragment extends Fragment implements SearchView.OnQueryTex
                         mProgressDialog.dismiss();
 
                         // Get categories from JSON data
-                        categories = JSONParser.parseCategories(jsonObject);
+                        categories = JSONParser.parseCategories(jsonObject, getActivity());
 
                         RecyclerViewFragmentPagerAdaptor adaptor = new
                                 RecyclerViewFragmentPagerAdaptor(getChildFragmentManager(), categories);

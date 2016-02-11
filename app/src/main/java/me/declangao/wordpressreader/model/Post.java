@@ -1,22 +1,46 @@
 package me.declangao.wordpressreader.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.ArrayList;
 
 /**
  * Post object along with its properties, as well as their corresponding getter and setter methods
  */
-public class Post {
-    private String title;
-    private String content;
-    private String thumbnailUrl;
-    private String featuredImageUrl = "";
-    private String viewCount;
-    private String date;
-    private String author;
-    private String url;
-    private int commentCount;
+@DatabaseTable(tableName = "post")
+public class Post extends ormliteModel{
+
+    @DatabaseField(id = true)
     private int id;
-    private ArrayList<String> categories;
+
+    @DatabaseField
+    private String title;
+
+    @DatabaseField
+    private String content;
+
+    @DatabaseField
+    private String thumbnailUrl;
+
+    @DatabaseField
+    private String featuredImageUrl = "";
+
+    @DatabaseField
+    private String viewCount;
+
+    @DatabaseField
+    private String date;
+
+    @DatabaseField
+    private String author;
+
+    @DatabaseField
+    private String url;
+
+    @DatabaseField
+    private int commentCount;
+
 
     public Post() {
 
@@ -79,14 +103,6 @@ public class Post {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
-    }
-
-    public ArrayList<String> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(ArrayList<String> categories) {
-        this.categories = categories;
     }
 
     public String getViewCount() {
